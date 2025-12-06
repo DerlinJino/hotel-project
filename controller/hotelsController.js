@@ -2,7 +2,7 @@ const fs = require("fs");
 
 let hotels = JSON.parse(fs.readFileSync("./data/hotels.json"));
 
-exports.getAllHotels = (req, res) => {
+exports.getAll = (req, res) => {
   res.status(200).json({
     status: "success",
     count: hotels.length,
@@ -12,7 +12,7 @@ exports.getAllHotels = (req, res) => {
   });
 };
 
-exports.createHotel = (req, res) => {
+exports.create = (req, res) => {
   const newId = hotels[hotels.length - 1].id + 1;
   const newHotel = Object.assign({ id: newId }, req.body);
   hotels.push(newHotel);
@@ -27,7 +27,7 @@ exports.createHotel = (req, res) => {
   });
 };
 
-exports.getHotelById = (req, res) => {
+exports.getById = (req, res) => {
   //Read ID Route Parameter value & convert it to number type...
   const id = req.params.id * 1;
 
@@ -48,7 +48,7 @@ exports.getHotelById = (req, res) => {
   });
 };
 
-exports.updateHotel = (req, res) => {
+exports.update = (req, res) => {
   const id = +req.params.id;
   const hotelToUpdate = hotels.find((hotel) => hotel.id === id);
 
@@ -79,7 +79,7 @@ exports.updateHotel = (req, res) => {
   Object.assign(hotelToUpdate, body);
 };
 
-exports.deleteHotel = (req, res) => {
+exports.delete = (req, res) => {
   const id = +req.params.id;
 
   const hotelToDelete = hotels.find((hotel) => hotel.id === id);
