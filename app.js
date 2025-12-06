@@ -1,9 +1,31 @@
 const express = require("express");
-const hotelController = require("./controller/hotelsController");
+const hotelRouter = require("./routers/hotelsRouter");
+
+//creating an express app
 const app = express();
+
+//using middleware
 app.use(express.json());
 
+//adding routes for app
+app.use("/api/v1/hotels", hotelRouter);
+
 /*
+//chaining routes
+app
+  .route("/api/v1/hotels")
+  .get(hotelController.getAll)
+  .post(hotelController.create);
+
+app
+  .route("/api/v1/hotels/:id")
+  .get(hotelController.getById)
+  .patch(hotelController.update)
+  .delete(hotelController.delete);
+*/
+
+/*
+ //General route handling
 //GET: localhost:3000/api/v1/hotels
 app.get("/api/v1/hotels", hotelController.getAll);
 
@@ -19,17 +41,5 @@ app.patch("/api/v1/hotels/:id", hotelController.update);
 //DELETE: localhost:3000/api/v1/hotels/10
 app.delete("/api/v1/hotels/:id", hotelController.delete);
 */
-
-//chaining routes
-app
-  .route("/api/v1/hotels")
-  .get(hotelController.getAll)
-  .post(hotelController.create);
-
-app
-  .route("/api/v1/hotels/:id")
-  .get(hotelController.getById)
-  .patch(hotelController.update)
-  .delete(hotelController.delete);
 
 module.exports = app;
