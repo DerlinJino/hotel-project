@@ -3,7 +3,12 @@ const hotelController = require("./../controller/hotelsController");
 
 const hotelRouter = express.Router(); //it returns a middleware
 
-hotelRouter.route("/").get(hotelController.getAll).post(hotelController.create);
+hotelRouter.param("id", hotelController.checkHotelExist);
+
+hotelRouter
+  .route("/")
+  .get(hotelController.getAll)
+  .post(hotelController.validatePostBody, hotelController.create);
 
 hotelRouter
   .route("/:id")

@@ -2,6 +2,36 @@ const fs = require("fs");
 
 let hotels = JSON.parse(fs.readFileSync("./data/hotels.json"));
 
+exports.checkHotelExist = (req, res, next, value) => {
+  const hotel = hotels.find((hotel) => hotel.id === +value);
+
+  if (!hotel) {
+    return res.status(404).json({
+      status: "fail",
+      message: " Hotel with ID " + value + " cannot be found",
+    });
+  }
+  next();
+};
+
+exports.validatePostBody = (req, res, next) => {
+  const body = req.body;
+  if (!body) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Request does not contain a body.",
+    });
+  }
+
+  if (!body.name || !body.city || !body.price) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Request body does not contain a valid hotel object.",
+    });
+  }
+  next();
+};
+
 exports.getAll = (req, res) => {
   res.status(200).json({
     status: "success",
@@ -33,15 +63,9 @@ exports.getById = (req, res) => {
 
   const hotel = hotels.find((hotel) => hotel.id === id);
 
-  if (!hotel) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Hotel with ID " + id + " is not found",
-    });
-  }
-
   res.status(200).json({
     status: "success",
+    requestTime: req.requestedAt,
     data: {
       hotel,
     },
@@ -51,14 +75,6 @@ exports.getById = (req, res) => {
 exports.update = (req, res) => {
   const id = +req.params.id;
   const hotelToUpdate = hotels.find((hotel) => hotel.id === id);
-
-  if (!hotelToUpdate) {
-    return res.status(404).json({
-      status: "fail",
-      message:
-        "Cannot update because the hotel with ID " + id + " cannot be found",
-    });
-  }
 
   const body = req.body;
   const index = hotels.indexOf(hotelToUpdate);
@@ -83,14 +99,6 @@ exports.delete = (req, res) => {
   const id = +req.params.id;
 
   const hotelToDelete = hotels.find((hotel) => hotel.id === id);
-
-  if (!hotelToDelete) {
-    return res.status(404).json({
-      status: "fail",
-      message:
-        "Cannot delete because the hotel with ID " + id + " cannot be found",
-    });
-  }
 
   const index = hotels.indexOf(hotelToDelete);
   hotels.splice(index, 1);
