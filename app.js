@@ -15,6 +15,7 @@ const logger = (req, res, next) => {
 
 //using middleware
 app.use(express.json());
+app.use(express.static("./public"));
 app.use(morgan("dev"));
 app.use(logger);
 
